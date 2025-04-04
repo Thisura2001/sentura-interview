@@ -9,16 +9,18 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import org.springframework.stereotype.Service;
-import java.util.List;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class CrudService {
     private final UserRepo userRepository;
-    private static final String base_url = "https://8015b5dbc0724d38882ac90397c27649.weavy.io";
-    private static final String token = "wys_hMWpXdekxcn9Gc8Ioah3azOllzUZ7l3HN9yB";
+
+    private static final String base_url = "https://8015b5dbc0724d38882ac90397c27649.weavy.io/api/users";
+    private static final String token = "Bearer wys_hMWpXdekxcn9Gc8Ioah3azOllzUZ7l3HN9yB";
     private static final OkHttpClient client = new OkHttpClient();
 
     public UserDto createUser(UserDto dto) throws IOException {
@@ -38,7 +40,7 @@ public class CrudService {
                 .addHeader("Content-Type", "application/json")
                 .build();
 
-        client.newCall(request).execute().close(); // Make request
+        client.newCall(request).execute().close();
 
         return toDto(saved);
     }
@@ -53,8 +55,8 @@ public class CrudService {
 
     public UserDto updateUser(Long id, UserDto dto) {
         UserEntity existing = userRepository.findById(id).orElseThrow();
-        existing.setName(dto.getName());
         existing.setUid(dto.getUid());
+        existing.setName(dto.getName());
         return toDto(userRepository.save(existing));
     }
 
