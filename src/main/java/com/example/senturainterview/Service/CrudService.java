@@ -24,10 +24,8 @@ public class CrudService {
     private static final OkHttpClient client = new OkHttpClient();
 
     public UserDto createUser(UserDto dto) throws IOException {
-        // Save to local DB
         UserEntity saved = userRepository.save(toEntity(dto));
 
-        // Call Weavy API
         RequestBody body = RequestBody.create(
                 MediaType.parse("application/json"),
                 "{ \"uid\": \"" + dto.getUid() + "\", \"name\": \"" + dto.getName() + "\" }"
